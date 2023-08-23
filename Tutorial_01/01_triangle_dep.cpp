@@ -1,24 +1,27 @@
 #include "gl_framework.hpp"
 #include "shader_util.hpp"
 
-float points[] = {
-    0.0f,  0.5f,  0.0f,
-    0.5f, -0.5f,  0.0f,
-    -0.5f, -0.5f,  0.0f
-  };
-
-
-
 void renderGL(void)
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // Do not fill
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
   glColor4f(0.5, 0.0, 0.5, 1.0);
   glBegin(GL_TRIANGLES);
-  glVertex3f(0.0f,  0.5f,  0.0f);
+  glVertex3f(0.5f,  0.5f,  0.0f);
   glVertex3f(0.5f, -0.5f,  0.0f);
   glVertex3f(-0.5f, -0.5f,  0.0f);
-  glEnd();
+
+  // Triangle 2
+    glColor4f(0.0, 0.5, 0.5, 1.0);
+    glBegin(GL_TRIANGLES);
+    glVertex3f(-0.5f,  0.5f,  0.0f);
+    glVertex3f(0.5f, 0.5f,  0.0f);
+    glVertex3f(-0.5f, -0.5f,  0.0f);
+
+    glEnd();
 }
 
 int main(int argc, char** argv)

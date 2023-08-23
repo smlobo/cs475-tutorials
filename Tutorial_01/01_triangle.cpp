@@ -2,25 +2,34 @@
 #include "shader_util.hpp"
 
 float points[] = {
-    0.0f,  0.5f,  0.0f,
+    -0.5f,  0.5f,  0.0f,
+    0.5f,  0.5f,  0.0f,
     0.5f, -0.5f,  0.0f,
-    -0.5f, -0.5f,  0.0f
+    -0.5f, -0.5f,  0.0f,
+    -0.5f,  0.5f,  0.0f
   };
 
-GLuint shaderProgram;
+GLuint shaderProgram1, shaderProgram2;
 GLuint vbo, vao;
 
 void initShadersGL(void)
 {
   std::string vertex_shader_file("simple_vs.glsl");
   std::string fragment_shader_file("simple_fs.glsl");
+    std::string fragment_shader_file_red("simple_fs_red.glsl");
 
-  std::vector<GLuint> shaderList;
-  shaderList.push_back(csX75::LoadShaderGL(GL_VERTEX_SHADER, vertex_shader_file));
-  shaderList.push_back(csX75::LoadShaderGL(GL_FRAGMENT_SHADER, fragment_shader_file));
+  std::vector<GLuint> shaderList1;
+  shaderList1.push_back(csX75::LoadShaderGL(GL_VERTEX_SHADER, vertex_shader_file));
+  shaderList1.push_back(csX75::LoadShaderGL(GL_FRAGMENT_SHADER, fragment_shader_file));
 
-  shaderProgram = csX75::CreateProgramGL(shaderList);
-  
+  shaderProgram1 = csX75::CreateProgramGL(shaderList1);
+
+    std::vector<GLuint> shaderList2;
+    shaderList2.push_back(csX75::LoadShaderGL(GL_VERTEX_SHADER, vertex_shader_file));
+    shaderList2.push_back(csX75::LoadShaderGL(GL_FRAGMENT_SHADER, fragment_shader_file_red));
+
+    shaderProgram2 = csX75::CreateProgramGL(shaderList2);
+
 }
 
 void initVertexBufferGL(void)
@@ -30,7 +39,7 @@ void initVertexBufferGL(void)
   //Set it as the current buffer to be used by binding it
   glBindBuffer (GL_ARRAY_BUFFER, vbo);
   //Copy the points into the current buffer - 9 float values, start pointer and static data
-  glBufferData (GL_ARRAY_BUFFER, 9 * sizeof (float), points, GL_STATIC_DRAW);
+  glBufferData (GL_ARRAY_BUFFER, 15 * sizeof (float), points, GL_STATIC_DRAW);
 
   //Ask GL for a Vertex Attribute Object (vao)
   glGenVertexArrays (1, &vao);
@@ -47,12 +56,23 @@ void renderGL(void)
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  glUseProgram(shaderProgram);
+  glUseProgram(shaderProgram1);
 
   glBindVertexArray (vao);
 
   // Draw points 0-3 from the currently bound VAO with current in-use shader
   glDrawArrays(GL_TRIANGLES, 0, 3);
+
+  // Change color
+//  GLint colorLocation
+//    glColor4f(0.0, 0.5, 0.5, 1.0);
+
+    glUseProgram(shaderProgram2);
+  glDrawArrays(GL_TRIANGLES, 2, 5);
+//  glDrawArrays(GL_QUADS, 0, 4);
+
+    // Do not fill
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 int main(int argc, char** argv)
